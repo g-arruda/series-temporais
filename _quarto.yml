@@ -1,0 +1,45 @@
+project:
+  type: book
+
+book:
+  title: "Notas em Econometria"
+  subtitle: "Teoria e Aplicação"
+  author: "Gabriel Arruda"
+  date: last-modified
+  repo-url: https://github.com/g-arruda
+  page-navigation: true
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    lang: pt
+    citations-hover: true
+    footnotes-hover: true
+    crossrefs-hover: true
+    code-fold: true
+    code-summary: "Mostrar código"
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+    toc: true
+    toc-depth: 3
+    back-to-top-navigation: true
+    css: styles.css
+  pdf:
+    documentclass: scrreprt
+    lang: pt
+    indent: true
+    pdf-engine: pdflatex
+    hyperrefoptions:
+    - linktoc=all
+    - pdfwindowui
+    - pdfpagemode=FullScreen
+    header-includes:
+    - \usepackage{indentfirst}
+    - \setlength{\parindent}{1.3cm}
+    - \setlength{\parskip}{0.2cm}
