@@ -302,7 +302,7 @@ $$
 \mathbb{E}(u_n, u_1) & \mathbb{E}(u_n, u_2) & \cdots & \mathbb{E}(u_n)^{2}
 \end{bmatrix}
 $$
-Vamos ter que na diagonal principal é a variância dos erros e $\forall \, \mathbb{E}(u_{i}, u_{j})$ em que $i \neq j$ temos a covariância dos erros. Sob as hipóteses de homoscedasticidade\footnote{Variância dos erros é constante, isto é, $\mathbb{E}(u_i^2) = \sigma^2, \, \forall i=1, \ldots, n$} e não autocorrelação, vamos ter que:
+Vamos ter que na diagonal principal é a variância dos erros e $\forall \, \mathbb{E}(u_{i}, u_{j})$ em que $i \neq j$ temos a covariância dos erros. Sob as hipóteses de homoscedasticidade^[Variância dos erros é constante, isto é, $\mathbb{E}(u_i^2) = \sigma^2, \, \forall i=1, \ldots, n$] e não autocorrelação, vamos ter que:
 
 $$
 UU' = \begin{bmatrix}
