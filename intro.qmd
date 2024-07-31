@@ -381,24 +381,20 @@ Então, $\bar{X}_{n}$ **converge em probabilidade** para $\mu$.
 import numpy as np
 import matplotlib.pyplot as plt
 
-plt.style.use("fast")
+def lei_grandes_numeros(pop_mean, pop_std, sample_sizes):
+    np.random.seed(0)  # Para reprodutibilidade
 
-# Configurações da simulação
-np.random.seed(0)  # Para reprodutibilidade
-pop_mean = 10  # Média populacional
-pop_std = 2  # Desvio padrão populacional
-n_simulations = 300  # Número de amostras/simulações
-sample_sizes = np.arange(1, n_simulations + 1)  # Tamanhos das amostras
+    sample_means = [np.random.normal(pop_mean, pop_std, size).mean() for size in sample_sizes]
 
-# Simulação da Lei dos Grandes Números
-sample_means = []
-for size in sample_sizes:
-    sample = np.random.normal(pop_mean, pop_std, size)
-    sample_mean = np.mean(sample)
-    sample_means.append(sample_mean)
+    return np.array(sample_means)
 
-# Conversão para array do numpy
-sample_means = np.array(sample_means)
+pop_mean = 10
+pop_std = 2
+n_simulations = 300
+sample_sizes = range(1, n_simulations + 1)
+
+# Gerando os dados
+sample_means = lei_grandes_numeros(pop_mean, pop_std,sample_sizes)
 
 # Visualização dos resultados
 plt.plot(sample_sizes, sample_means, label='Média amostral')
@@ -406,8 +402,6 @@ plt.axhline(y=pop_mean, color='r', linestyle='-', label='Média populacional')
 plt.xlabel('Tamanho da Amostra')
 plt.ylabel('Média')
 plt.title('Demonstração da Lei dos Grandes Números')
-plt.legend()
-plt.grid(False)
 plt.show()
 ```
 
@@ -435,42 +429,35 @@ $$
 
 ```{python}
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 
-# Função para gerar a distribuição das médias das amostras
-def plot_distribution(sample_size, num_samples, ax, title):
-    np.random.seed(0)
-    # Gerar dados com distribuição normal
-    data = np.random.uniform(low=0, high=1, size=(num_samples, sample_size))
+def tcl(N, pop):
+    size_sample = 100
+    sample_mean = [
+        np.random.choice(pop, size=size_sample, replace=True).mean() for _ in range(N)
+    ]
+    return np.array(sample_mean)
+
+def plot_tcl(N_values, pop):
+
+    fig, axs = plt.subplots(1, len(N_values), figsize=(15, 5), sharey=True)
     
-    # Calcular a média de cada amostra
-    sample_means = np.mean(data, axis=1)
-    
-    # Criar um DataFrame para armazenar as médias das amostras
-    df = pd.DataFrame(sample_means, columns=['Mean'])
-    
-    # Plotar a distribuição das médias das amostras
-    ax.hist(df['Mean'], bins=30, density=True, alpha=0.7, color='blue')
-    ax.set_title(title)
-    ax.set_xlabel('Média das Amostras')
-    ax.set_ylabel('Densidade')
-    ax.grid(True)
+    for i, N in enumerate(N_values):
+        sample_means = tcl(N, pop)
+        axs[i].hist(sample_means, bins=30, edgecolor='k', alpha=0.7)
+        axs[i].set_title(f'{N} Amostras', fontsize=21)
+        axs[i].set_xlabel('Média da Amostra', fontsize=18)
+        axs[i].set_ylabel('Frequência', fontsize=18)
 
-# Definir tamanhos de amostra diferentes
-sample_sizes = [10, 100, 1000]
-num_samples = 1000
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.show()
 
-# Configurar a figura com 3 subplots
-fig, axs = plt.subplots(1, 3, figsize=(18, 6))
+np.random.seed(0)
+# Gerar a população
+pop = np.random.uniform(size=1000)
 
-# Gerar e plotar os gráficos
-for ax, size in zip(axs, sample_sizes):
-    plot_distribution(size, num_samples, ax, f'Tamanho da Amostra = {size}')
-
-# Ajustar layout
-plt.tight_layout()
-plt.show()
+# Plota um histograma com diferentes números de amostras
+plot_tcl([50, 200, 1000], pop)
 
 ```
 
