@@ -472,7 +472,7 @@ u_1 &amp; u_2 &amp; \cdots &amp; u_n
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 \mathbb{E}(u_n, u_1) &amp; \mathbb{E}(u_n, u_2) &amp; \cdots &amp; \mathbb{E}(u_n)^{2}
 \end{bmatrix}
-\]</span> Vamos ter que na diagonal principal é a variância dos erros e <span class="math inline">\(\forall \, \mathbb{E}(u_{i}, u_{j})\)</span> em que <span class="math inline">\(i \neq j\)</span> temos a covariância dos erros. Sob as hipóteses de homoscedasticidade e não autocorrelação, vamos ter que:</p>
+\]</span> Vamos ter que na diagonal principal é a variância dos erros e <span class="math inline">\(\forall \, \mathbb{E}(u_{i}, u_{j})\)</span> em que <span class="math inline">\(i \neq j\)</span> temos a covariância dos erros. Sob as hipóteses de homoscedasticidade<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> e não autocorrelação, vamos ter que:</p>
 <p><span class="math display">\[
 UU' = \begin{bmatrix}
 \sigma^{2} &amp; 0 &amp; \cdots &amp; 0 \\
@@ -525,7 +525,7 @@ UU' = \begin{bmatrix}
 \]</span></p>
 <p>Então, <span class="math inline">\(\bar{X}_{n}\)</span> <strong>converge em probabilidade</strong> para <span class="math inline">\(\mu\)</span>.</p>
 </div>
-<div id="0ef207cc" class="cell" data-execution_count="1">
+<div id="81f785d7" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -579,7 +579,7 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 \lim_{n \to \infty} \mathbb{P}(Z_n \leq z) = \Phi(z) = \int_{-\infty}^{z} \frac{1}{\sqrt{2 \pi}} e^{-x^2/2} \, dx.
 \]</span></p>
 </div>
-<div id="79a417c3" class="cell" data-execution_count="2">
+<div id="61754431" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -637,6 +637,7 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 <li id="fn1"><p>Note que se somarmos n vezes um parâmetro é o mesmo que dizer n vezes o parâmetro, logo <span class="math inline">\(\sum_{i=1}^{N}\hat{\alpha} = n\hat{\alpha}\)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Vale lembrar que <span class="math inline">\(B\)</span> sem chapéu é o melhor ajuste possível da reta, os valores que só Deus sabe.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Vale lembrar que <span class="math inline">\((AB)' = B' A'\)</span><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Variância dos erros é constante, isto é, <span class="math inline">\(\mathbb{E}(u_i^2) = \sigma^2, \, \forall i=1, \ldots, n\)</span><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
