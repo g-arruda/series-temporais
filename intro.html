@@ -203,6 +203,14 @@ window.Quarto = {
   <ul>
   <li><a href="#regressão-linear" id="toc-regressão-linear" class="nav-link active" data-scroll-target="#regressão-linear"><span class="header-section-number">1.1</span> Regressão linear</a></li>
   <li><a href="#conceitos-de-convergência" id="toc-conceitos-de-convergência" class="nav-link" data-scroll-target="#conceitos-de-convergência"><span class="header-section-number">1.2</span> Conceitos de Convergência</a></li>
+  <li><a href="#séries-de-tempo" id="toc-séries-de-tempo" class="nav-link" data-scroll-target="#séries-de-tempo"><span class="header-section-number">1.3</span> Séries de tempo</a>
+  <ul class="collapse">
+  <li><a href="#processo-determinístico" id="toc-processo-determinístico" class="nav-link" data-scroll-target="#processo-determinístico"><span class="header-section-number">1.3.1</span> Processo determinístico</a></li>
+  <li><a href="#processo-estocástico" id="toc-processo-estocástico" class="nav-link" data-scroll-target="#processo-estocástico"><span class="header-section-number">1.3.2</span> Processo estocástico</a></li>
+  <li><a href="#estacionariedade-e-autocorrelação" id="toc-estacionariedade-e-autocorrelação" class="nav-link" data-scroll-target="#estacionariedade-e-autocorrelação"><span class="header-section-number">1.3.3</span> Estacionariedade e Autocorrelação</a></li>
+  <li><a href="#estacionariedade" id="toc-estacionariedade" class="nav-link" data-scroll-target="#estacionariedade"><span class="header-section-number">1.3.4</span> Estacionariedade</a></li>
+  <li><a href="#função-de-autocorrelação-fac" id="toc-função-de-autocorrelação-fac" class="nav-link" data-scroll-target="#função-de-autocorrelação-fac"><span class="header-section-number">1.3.5</span> Função de autocorrelação (FAC)</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -512,7 +520,7 @@ UU' = \begin{bmatrix}
 <li>O <strong>teorema do limite central</strong> diz que <span class="math inline">\(\sqrt{n}(X_n - \mu)\)</span> <strong>converge em distribuição</strong> para uma distribuição Normal. Isso significa que a média da amostra tem aproximadamente uma distribuição Normal para grandes valores de <span class="math inline">\(n\)</span>.</li>
 </ol>
 <div id="def-converg" class="theorem definition">
-<p><span class="theorem-title"><strong>Definição 1.1 (Convergencia)</strong></span> A sequência de variáveis aleatórias, <span class="math inline">\(X_{1}, X_{2}, \ldots\)</span>, <strong>converge em probabilidade</strong> para uma variável aleatória <span class="math inline">\(X\)</span>, se <span class="math inline">\(\forall \varepsilon &gt; 0\)</span>,</p>
+<p><span class="theorem-title"><strong>Definição 1.1 (Convergencia)</strong></span> A sequência<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> de variáveis aleatórias, <span class="math inline">\(X_{1}, X_{2}, \ldots\)</span>, <strong>converge em probabilidade</strong> para uma variável aleatória <span class="math inline">\(X\)</span>, se <span class="math inline">\(\forall \varepsilon &gt; 0\)</span>,</p>
 <p><span class="math display">\[
 \lim_{n \to \infty} \mathbb{P}(\left|X_{n} - X\right| \geq \varepsilon) = 0 \quad \text{ou} \quad \lim_{n \to \infty} \mathbb{P}(\left|X_{n} - X\right| &lt; \varepsilon) = 1
 \]</span></p>
@@ -525,7 +533,7 @@ UU' = \begin{bmatrix}
 \]</span></p>
 <p>Então, <span class="math inline">\(\bar{X}_{n}\)</span> <strong>converge em probabilidade</strong> para <span class="math inline">\(\mu\)</span>.</p>
 </div>
-<div id="9e338a4c" class="cell" data-execution_count="1">
+<div id="958e3854" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -573,7 +581,7 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 \lim_{n \to \infty} \mathbb{P}(Z_n \leq z) = \Phi(z) = \int_{-\infty}^{z} \frac{1}{\sqrt{2 \pi}} e^{-x^2/2} \, dx.
 \]</span></p>
 </div>
-<div id="499ba2a4" class="cell" data-execution_count="2">
+<div id="93837e0b" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -615,8 +623,181 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 </div>
 </div>
 </div>
+</section>
+<section id="séries-de-tempo" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="séries-de-tempo"><span class="header-section-number">1.3</span> Séries de tempo</h2>
+<p>Uma série de tempo é caracterizada por uma sequência de observações tomada sequencialmente no tempo. Podemos chamar essa sequência de observações $ (y_{1},y_{2},y_{3}…) $ como sendo variáveis aleatórias, onde <span class="math inline">\(y = f(t) + \varepsilon_{t}\)</span>, em outras palavras, cada observação é uma função do tempo mais um fator aleatório (ruído branco). Como esse <span class="math inline">\(y\)</span> depende do tempo, vamos ter um valor diferente de <span class="math inline">\(y\)</span> para cada valor de <span class="math inline">\(t=0,1,2,...,T\)</span>; <span class="math inline">\(y^{*} = f(t^{*}) + \varepsilon_{t^{*}}\)</span>. Então <span class="math inline">\(y_{1}\)</span> é o valor de <span class="math inline">\(y\)</span> no período 1, <span class="math inline">\(y_{2}\)</span> é o valor de <span class="math inline">\(y\)</span> no período 2 e assim vai. Uma série de tempo pode ser dividida entre um processo determinístico ou estocástico.</p>
+<section id="processo-determinístico" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="processo-determinístico"><span class="header-section-number">1.3.1</span> Processo determinístico</h3>
+<p>É um processo que não depende de um termo aleatório e sempre irá ter o mesmo resultado dado um valor inicial. O processo <span class="math inline">\(T_{t} = 1 + 0,1t\)</span> é um processo determinístico, pois não depende de nenhum fator aleatório, estando sempre acompanhado de uma constante (1) e um termo de tendência determinística <span class="math inline">\((0,1t)\)</span>.</p>
+<p>Podemos observar essa função melhor, gerando o seguinte gráfico no <strong>R</strong>.</p>
+</section>
+<section id="processo-estocástico" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="processo-estocástico"><span class="header-section-number">1.3.2</span> Processo estocástico</h3>
+<p>O que diferencia um processo estocástico do determinístico é o fator aleatório, por mais que esse fator seja aleatório ele apresenta uma função de distribuição de probabilidade, por mais que se saiba qual é o valor inicial de uma série, não dá para saber com exatidão o próximo valor, mas podemos atribuir probabilidades a diferentes valores.</p>
+<section id="ruído-branco" class="level4" data-number="1.3.2.1">
+<h4 data-number="1.3.2.1" class="anchored" data-anchor-id="ruído-branco"><span class="header-section-number">1.3.2.1</span> Ruído Branco</h4>
+<p>Um ruído branco é uma sequência serial de variáveis aleatórias não correlacionadas com média zero e variância finita e constante, seria aquele erro <span class="math inline">\((u)\)</span> da primeira parte do curso. Assumimos duas condições importantes para o ruído branco: ele deve ser independente um do outro e deve apresentar uma distribuição normal<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>. Sendo escrito da seguinte forma:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\varepsilon_{t} &amp;\sim i.i.d.\mathcal{N}(0, \sigma^2) \\
+\varepsilon_{t} &amp;\sim RB(0, \sigma^2)
+\end{aligned}
+\]</span></p>
+<p>O ruído branco assume 3 propriedades:</p>
+<ul>
+<li><span class="math inline">\(\mathbb{E}[\varepsilon_{t}] = \mathbb{E}[\varepsilon_{t} \mid \varepsilon_{t-1}, \varepsilon_{t-2}, \dotsc] = 0\)</span></li>
+<li><span class="math inline">\(\mathbb{E}[\varepsilon_{t} \varepsilon_{t-j}] = \text{cov}[\varepsilon_{t} \varepsilon_{t-j}] = 0\)</span></li>
+<li><span class="math inline">\(\text{var}[\varepsilon_{t}] = \text{cov}[\varepsilon_{t} \varepsilon_{t}] = \sigma^{2}_{\varepsilon_{t}}\)</span></li>
+</ul>
+<p>As duas primeiras propriedades dizem respeito à impossibilidade de preditividade e à ausência de autocorrelação. A terceira diz respeito à homocedasticidade, a variância ser constante.</p>
+<p>Para visualizar isso, criei uma função em <strong>Python</strong> que gera um conjunto de dados de ruído branco usando a função <em>np.random.normal</em> que cria um conjunto aleatório de dados de uma distribuição normal, onde <span class="math inline">\(n\)</span> é o tamanho da amostra desejado.</p>
+<div id="e448c741" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> white_noise(n):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    white_noise <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="dv">1</span>, n)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    plt.clf()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    plt.plot(white_noise)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    plt.axhline(<span class="dv">0</span>, color <span class="op">=</span> <span class="st">'black'</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>white_noise(<span class="dv">100</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_files/figure-html/cell-4-output-1.png" width="569" height="411" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="passeio-aleatório" class="level4" data-number="1.3.2.2">
+<h4 data-number="1.3.2.2" class="anchored" data-anchor-id="passeio-aleatório"><span class="header-section-number">1.3.2.2</span> Passeio aleatório</h4>
+<p>Esse tempo passeio aleatório se diz pelo fato de que o valor de uma variável em um determinado período é igual ao seu valor no período passado mais um fator aleatório determinado por <span class="math inline">\(\varepsilon_{t}\)</span>, sendo descrito por:</p>
+<p><span class="math display">\[
+y_{t} = y_{t-1} + \varepsilon_{t}
+\]</span></p>
+<p>Vamos supor um valor inicial para <span class="math inline">\(y_{t}\)</span> como sendo <span class="math inline">\(y_{1}\)</span>, então:</p>
+<p><span class="math display">\[
+\begin{aligned}
+y_{1} &amp;= y_{0} + \varepsilon_{1} \\
+y_{2} &amp;= y_{1} + \varepsilon_{2} \\
+y_{2} &amp;= y_{0} + \varepsilon_{1} + \varepsilon_{2}
+\end{aligned}
+\]</span></p>
+<p>Resolvendo isso recursivamente, temos:</p>
+<p><span class="math display">\[
+y_{t} = y_{0} + \sum_{i=1}^{t} \varepsilon_{i}
+\]</span></p>
+<p>Se <span class="math inline">\(y_{0} \sim 0\)</span>, podemos então dizer que o passeio aleatório é uma soma acumulada de ruídos brancos:</p>
+<p><span class="math display">\[
+y_{t} = \sum_{i=1}^{t} \varepsilon_{i}
+\]</span></p>
+<p>Pode acontecer o caso do passeio aleatório ter uma constante <span class="math inline">\(\gamma\)</span> adicionada:</p>
+<p><span class="math display">\[
+y_{1} = \gamma + y_{0} + \varepsilon_{1}
+\]</span></p>
+<p>Logo, quando <span class="math inline">\(y_{0} \sim 0\)</span>, vamos ter que:</p>
+<p><span class="math display">\[
+y_{t} = \gamma t + \sum_{i=1}^{t} \varepsilon_{i}
+\]</span></p>
+<div id="6f620649" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_walk(trend, n):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    yt <span class="op">=</span> np.zeros(n)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    epsilon <span class="op">=</span> np.random.normal(<span class="dv">0</span>,<span class="dv">1</span>,n)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> np.arange(<span class="dv">1</span>,n):</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        yt[t] <span class="op">=</span> t <span class="op">*</span> trend <span class="op">+</span> np.<span class="bu">sum</span>(epsilon[:t<span class="op">+</span><span class="dv">1</span>])</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> yt</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_rw(trend_list, t):</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    plt.clf()</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> trend <span class="kw">in</span> trend_list:</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        rw <span class="op">=</span> random_walk(trend, t)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        plt.plot(rw, label<span class="op">=</span><span class="ss">f'Tendencia = </span><span class="sc">{</span>trend<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>trend_list <span class="op">=</span> [<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="op">-</span><span class="fl">0.2</span>]</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>plot_rw(trend_list, t<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_files/figure-html/cell-5-output-1.png" width="577" height="411" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="estacionariedade-e-autocorrelação" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="estacionariedade-e-autocorrelação"><span class="header-section-number">1.3.3</span> Estacionariedade e Autocorrelação</h3>
+<p>Antes de entrar no assunto de autocorrelação, devemos ter em mente algumas propriedades referentes ao primeiro momento (esperança) e segundo momento (variância) de um passeio aleatório. O primeiro momento de um passeio aleatório pode ser calculado pela sua média:</p>
+<p><span class="math display">\[
+\mathbb{E}[y_{t}] = \mathbb{E}[y_{0} + \sum_{i=1}^{t} \varepsilon_{i}] = \mathbb{E}[y_{0}] + \mathbb{E}[\sum_{i=1}^{t} \varepsilon_{i}] = \mathbb{E}[y_{0}] + 0 = y_{0} = \mu
+\]</span></p>
+<p>Nota-se que a esperança (média) de <span class="math inline">\(y_{t}\)</span> não depende de <span class="math inline">\(t\)</span>, sendo uma constante e é por isso que estou chamando de <span class="math inline">\(\mu\)</span>.</p>
+<p>O segundo momento é a variância:</p>
+<p><span class="math display">\[
+\text{Var}[y_{t}] = \mathbb{E}[y_{t}^{2}] = \mathbb{E}[(y_{t} - \mathbb{E}[y_{t}])^{2}]
+\]</span> <span class="math display">\[
+= \mathbb{E}[y_{t}^{2}] - \mathbb{E}[y_{0}]^{2}
+\]</span> <span class="math display">\[
+= \mathbb{E}[(y_{0} + \sum \varepsilon_{i})^{2}]
+\]</span> <span class="math display">\[
+= \mathbb{E}[y_{0}^{2} + 2y_{0}\sum \varepsilon_{i} + \sum \varepsilon_{i}^{2}] - \mu^{2}
+\]</span> <span class="math display">\[
+= \mathbb{E}[y_{0}^{2}] + 2y_{0}\sum \mathbb{E}[\varepsilon_{i}] + \sum \mathbb{E}[\varepsilon_{i}^{2}] - \mu^{2}
+\]</span> <span class="math display">\[
+= \mu^{2} + 0 + \sum \sigma^{2} - \mu^{2} = t \sigma^{2}
+\]</span></p>
+<p>Podemos observar que a variância de um processo aleatório não é constante, pois vai depender de <span class="math inline">\(t\)</span>.</p>
+<p>Outra parada importante é definir a covariância para <span class="math inline">\(k\)</span> lags:</p>
+<p><span class="math display">\[
+\text{Cov}[y_{t},y_{t-k}] = \mathbb{E} \{ (y_{t} - \mathbb{E}[y_{t}])(y_{t-k} - \mathbb{E}[y_{t-k}]) \} = \mathbb{E} [(y_{t} - \mu)(y_{t-k} - \mu )]
+\]</span></p>
+</section>
+<section id="estacionariedade" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="estacionariedade"><span class="header-section-number">1.3.4</span> Estacionariedade</h3>
+<p>A hipótese da estacionariedade é um caso particular do <strong>processo estocástico</strong>, no qual se assume que o processo está em um estado de equilíbrio. O caso dos processos estritamente estacionários (estacionariedade forte) é quando <strong>todas</strong> as suas propriedades (momentos) não são afetadas pelo tempo. Como essas condições são muito restritas, na grande maioria das vezes nos referimos a esse processo estocástico como <strong>fracamente estacionário</strong>, ou <strong>covariância-estacionário</strong>, ou <strong>estacionário de segunda ordem</strong>. Isso quer dizer que apenas a média e a variância devem ser constantes e que a covariância deve depender apenas do número de lags <span class="math inline">\((k)\)</span>:</p>
+<p><span class="math display">\[
+\mathbb{E}[y_{t}] = \mu
+\]</span> <span class="math display">\[
+\text{Var}[y_{t}] = \mathbb{E}[(y_{t} - \mu)^{2}] = \sigma^2
+\]</span> <span class="math display">\[
+\text{Cov}[y_{t},y_{t+k}] = \mathbb{E} [ (y_{t} - \mu)(y_{t-k} - \mu)] = \gamma_{k}
+\]</span></p>
+</section>
+<section id="função-de-autocorrelação-fac" class="level3" data-number="1.3.5">
+<h3 data-number="1.3.5" class="anchored" data-anchor-id="função-de-autocorrelação-fac"><span class="header-section-number">1.3.5</span> Função de autocorrelação (FAC)</h3>
+<p>Ao assumir a hipótese da estacionariedade, vamos ter que a função conjunta de probabilidade de <span class="math inline">\(y_{t_{1}}\)</span> e <span class="math inline">\(y_{t_{2}}\)</span> será a mesma para todo o tempo <span class="math inline">\(t_{1}\)</span> e <span class="math inline">\(t_{2}\)</span>, que será constante. Isso implica que a <strong>covariância</strong> entre <span class="math inline">\(y_{t}\)</span> e <span class="math inline">\(y_{t+k}\)</span> será separada apenas por <span class="math inline">\(k\)</span> intervalos de tempo (lag). Assim, a <em>autocovariância</em> ao lag <span class="math inline">\(k\)</span> é definida por:</p>
+<p><span class="math display">\[
+\gamma_{k} = \text{Cov}[y_{t},y_{t+k}] = \mathbb{E} [ (y_{t} - \mu)(y_{t-k} - \mu)]
+\]</span></p>
+<p>Da mesma forma, teremos que a <strong>autocorrelação</strong> é dada por:</p>
+<p><span class="math display">\[
+\rho_{k} = \dfrac{\mathbb{E} [ (y_{t} - \mu)(y_{t-k} - \mu)]}{\sqrt{\mathbb{E}[(y_{t} - \mu)^{2}] \mathbb{E}[(y_{t} - \mu)^{2}] }} = \dfrac{\mathbb{E} [ (y_{t} - \mu)(y_{t-k} - \mu)]}{\sigma^{2}}
+\]</span></p>
+<p>Como em um processo estacionário a variância é constante, vamos ter que <span class="math inline">\(\gamma_{0} = \sigma^{2}\)</span>. Podemos então dizer que a autocorrelação no lag <span class="math inline">\(k\)</span> é:</p>
+<p><span class="math display">\[
+\rho_{k} = \dfrac{\gamma_{k}}{\gamma_{0}}
+\]</span></p>
+<p>E isso implica que <span class="math inline">\(\rho_{0} = 1\)</span> se <span class="math inline">\(k=0\)</span>.</p>
+<p>A <strong>Função de autocorrelação</strong> é quando se plota um gráfico <span class="math inline">\(\rho_{k}\)</span> contra o lag <span class="math inline">\(k\)</span>.</p>
 
 
+</section>
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
@@ -625,6 +806,8 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 <li id="fn2"><p>Vale lembrar que <span class="math inline">\(B\)</span> sem chapéu é o melhor ajuste possível da reta, os valores que só Deus sabe.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Vale lembrar que <span class="math inline">\((AB)' = B' A'\)</span><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Variância dos erros é constante, isto é, <span class="math inline">\(\mathbb{E}(u_i^2) = \sigma^2, \, \forall i=1, \ldots, n\)</span><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Lembre-se da ideia de convergência de uma sequência. Dado um <span class="math inline">\(\varepsilon &gt; 0\)</span>, dizemos que <span class="math inline">\(x_{k} \to x\)</span> se existir um <span class="math inline">\(k_0\)</span>, em que <span class="math inline">\(\forall k \geq k_0 \implies |x_{k} - x| &lt; \varepsilon\)</span><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Chamada também de <em>Distribuição normal gaussiana</em>.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
