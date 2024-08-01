@@ -533,7 +533,7 @@ UU' = \begin{bmatrix}
 \]</span></p>
 <p>Então, <span class="math inline">\(\bar{X}_{n}\)</span> <strong>converge em probabilidade</strong> para <span class="math inline">\(\mu\)</span>.</p>
 </div>
-<div id="b5db971f" class="cell" data-execution_count="1">
+<div id="958e3854" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -581,7 +581,7 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 \lim_{n \to \infty} \mathbb{P}(Z_n \leq z) = \Phi(z) = \int_{-\infty}^{z} \frac{1}{\sqrt{2 \pi}} e^{-x^2/2} \, dx.
 \]</span></p>
 </div>
-<div id="9b44cb06" class="cell" data-execution_count="2">
+<div id="93837e0b" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -652,7 +652,7 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 </ul>
 <p>As duas primeiras propriedades dizem respeito à impossibilidade de preditividade e à ausência de autocorrelação. A terceira diz respeito à homocedasticidade, a variância ser constante.</p>
 <p>Para visualizar isso, criei uma função em <strong>Python</strong> que gera um conjunto de dados de ruído branco usando a função <em>np.random.normal</em> que cria um conjunto aleatório de dados de uma distribuição normal, onde <span class="math inline">\(n\)</span> é o tamanho da amostra desejado.</p>
-<div id="5c175660" class="cell" data-execution_count="3">
+<div id="e448c741" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> white_noise(n):</span>
@@ -705,7 +705,7 @@ y_{1} = \gamma + y_{0} + \varepsilon_{1}
 <p><span class="math display">\[
 y_{t} = \gamma t + \sum_{i=1}^{t} \varepsilon_{i}
 \]</span></p>
-<div id="c7a7737a" class="cell" data-execution_count="4">
+<div id="6f620649" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_walk(trend, n):</span>
