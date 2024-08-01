@@ -353,7 +353,7 @@ A ideia aqui é entender o que acontece com a amostra à medida que seu tamanho 
 
 ## Convergencia
 
-A sequência\footnote{Lembre-se da ideia de convergência de uma sequência. Dado um $\varepsilon > 0$, dizemos que $x_{k} \to x$ se existir um $k_0$, em que $\forall k \geq k_0 \implies |x_{k} - x| < \varepsilon$} de variáveis aleatórias, $X_{1}, X_{2}, \ldots$, **converge em probabilidade** para uma variável aleatória $X$, se $\forall \varepsilon > 0$,
+A sequência^[Lembre-se da ideia de convergência de uma sequência. Dado um $\varepsilon > 0$, dizemos que $x_{k} \to x$ se existir um $k_0$, em que $\forall k \geq k_0 \implies |x_{k} - x| < \varepsilon$] de variáveis aleatórias, $X_{1}, X_{2}, \ldots$, **converge em probabilidade** para uma variável aleatória $X$, se $\forall \varepsilon > 0$,
 
 $$
 \lim_{n \to \infty} \mathbb{P}(\left|X_{n} - X\right| \geq \varepsilon) = 0 \quad \text{ou} \quad \lim_{n \to \infty} \mathbb{P}(\left|X_{n} - X\right| < \varepsilon) = 1
@@ -461,4 +461,197 @@ plot_tcl([50, 200, 1000], pop)
 
 ```
 
+
+## Séries de tempo
+
+Uma série de tempo é caracterizada por uma sequência de observações tomada sequencialmente no tempo. Podemos chamar essa sequência de observações $ (y_{1},y_{2},y_{3}...) $ como sendo variáveis aleatórias, onde $y = f(t) + \varepsilon_{t}$, em outras palavras, cada observação é uma função do tempo mais um fator aleatório (ruído branco). Como esse $y$ depende do tempo, vamos ter um valor diferente de $y$ para cada valor de $t=0,1,2,...,T$; $y^{*} = f(t^{*}) + \varepsilon_{t^{*}}$. Então $y_{1}$ é o valor de $y$ no período 1, $y_{2}$ é o valor de $y$ no período 2 e assim vai. Uma série de tempo pode ser dividida entre um processo determinístico ou estocástico.
+
+### Processo determinístico
+
+É um processo que não depende de um termo aleatório e sempre irá ter o mesmo resultado dado um valor inicial. O processo $T_{t} = 1 + 0,1t$ é um processo determinístico, pois não depende de nenhum fator aleatório, estando sempre acompanhado de uma constante (1) e um termo de tendência determinística $(0,1t)$.
+
+Podemos observar essa função melhor, gerando o seguinte gráfico no **R**.
+
+### Processo estocástico
+
+O que diferencia um processo estocástico do determinístico é o fator aleatório, por mais que esse fator seja aleatório ele apresenta uma função de distribuição de probabilidade, por mais que se saiba qual é o valor inicial de uma série, não dá para saber com exatidão o próximo valor, mas podemos atribuir probabilidades a diferentes valores.
+
+#### Ruído Branco
+
+Um ruído branco é uma sequência serial de variáveis aleatórias não correlacionadas com média zero e variância finita e constante, seria aquele erro $(u)$ da primeira parte do curso. Assumimos duas condições importantes para o ruído branco: ele deve ser independente um do outro e deve apresentar uma distribuição normal^[Chamada também de *Distribuição normal gaussiana*.]. Sendo escrito da seguinte forma:
+
+$$
+\begin{aligned}
+\varepsilon_{t} &\sim i.i.d.\mathcal{N}(0, \sigma^2) \\
+\varepsilon_{t} &\sim RB(0, \sigma^2)
+\end{aligned}
+$$
+
+O ruído branco assume 3 propriedades:
+
+- $\mathbb{E}[\varepsilon_{t}] = \mathbb{E}[\varepsilon_{t} \mid \varepsilon_{t-1}, \varepsilon_{t-2}, \dotsc] = 0$
+- $\mathbb{E}[\varepsilon_{t} \varepsilon_{t-j}] = \text{cov}[\varepsilon_{t} \varepsilon_{t-j}] = 0$
+- $\text{var}[\varepsilon_{t}] = \text{cov}[\varepsilon_{t} \varepsilon_{t}] = \sigma^{2}_{\varepsilon_{t}}$
+
+As duas primeiras propriedades dizem respeito à impossibilidade de preditividade e à ausência de autocorrelação. A terceira diz respeito à homocedasticidade, a variância ser constante.
+
+Para visualizar isso, criei uma função em **Python** que gera um conjunto de dados de ruído branco usando a função *np.random.normal* que cria um conjunto aleatório de dados de uma distribuição normal, onde $n$ é o tamanho da amostra desejado. 
+
+```{python}
+def white_noise(n):
+    np.random.seed(0)
+    white_noise = np.random.normal(0, 1, n)
+    
+    plt.clf()
+    plt.plot(white_noise)
+    plt.axhline(0, color = 'black')
+    plt.show()
+    
+white_noise(100)
+```
+
+#### Passeio aleatório
+
+Esse tempo passeio aleatório se diz pelo fato de que o valor de uma variável em um determinado período é igual ao seu valor no período passado mais um fator aleatório determinado por $\varepsilon_{t}$, sendo descrito por:
+
+$$
+y_{t} = y_{t-1} + \varepsilon_{t}
+$$
+
+Vamos supor um valor inicial para $y_{t}$ como sendo $y_{1}$, então:
+
+$$
+\begin{aligned}
+y_{1} &= y_{0} + \varepsilon_{1} \\
+y_{2} &= y_{1} + \varepsilon_{2} \\
+y_{2} &= y_{0} + \varepsilon_{1} + \varepsilon_{2}
+\end{aligned}
+$$
+
+Resolvendo isso recursivamente, temos:
+
+$$
+y_{t} = y_{0} + \sum_{i=1}^{t} \varepsilon_{i}
+$$
+
+Se $y_{0} \sim 0$, podemos então dizer que o passeio aleatório é uma soma acumulada de ruídos brancos:
+
+$$
+y_{t} = \sum_{i=1}^{t} \varepsilon_{i}
+$$
+
+Pode acontecer o caso do passeio aleatório ter uma constante $\gamma$ adicionada:
+
+$$
+y_{1} = \gamma + y_{0} + \varepsilon_{1}
+$$
+
+Logo, quando $y_{0} \sim 0$, vamos ter que:
+
+$$
+y_{t} = \gamma t + \sum_{i=1}^{t} \varepsilon_{i}
+$$
+
+```{python}
+def random_walk(trend, n):
+    np.random.seed(0)
+    
+    yt = np.zeros(n)
+    epsilon = np.random.normal(0,1,n)
+    for t in np.arange(1,n):
+        yt[t] = t * trend + np.sum(epsilon[:t+1])
+    
+    return yt
+
+
+def plot_rw(trend_list, t):
+    plt.clf()
+    for trend in trend_list:
+        rw = random_walk(trend, t)
+        plt.plot(rw, label=f'Tendencia = {trend}')
+    
+    plt.legend()
+    plt.show()
+
+trend_list = [0, 0.2, -0.2]
+plot_rw(trend_list, t=100)
+```
+
+
+### Estacionariedade e Autocorrelação
+
+Antes de entrar no assunto de autocorrelação, devemos ter em mente algumas propriedades referentes ao primeiro momento (esperança) e segundo momento (variância) de um passeio aleatório. O primeiro momento de um passeio aleatório pode ser calculado pela sua média:
+
+$$
+\mathbb{E}[y_{t}] = \mathbb{E}[y_{0} + \sum_{i=1}^{t} \varepsilon_{i}] = \mathbb{E}[y_{0}] + \mathbb{E}[\sum_{i=1}^{t} \varepsilon_{i}] = \mathbb{E}[y_{0}] + 0 = y_{0} = \mu
+$$
+
+Nota-se que a esperança (média) de $y_{t}$ não depende de $t$, sendo uma constante e é por isso que estou chamando de $\mu$.
+
+O segundo momento é a variância:
+
+$$
+\text{Var}[y_{t}] = \mathbb{E}[y_{t}^{2}] = \mathbb{E}[(y_{t} - \mathbb{E}[y_{t}])^{2}]
+$$
+$$
+= \mathbb{E}[y_{t}^{2}] - \mathbb{E}[y_{0}]^{2}
+$$
+$$
+= \mathbb{E}[(y_{0} + \sum \varepsilon_{i})^{2}]
+$$
+$$
+= \mathbb{E}[y_{0}^{2} + 2y_{0}\sum \varepsilon_{i} + \sum \varepsilon_{i}^{2}] - \mu^{2}
+$$
+$$
+= \mathbb{E}[y_{0}^{2}] + 2y_{0}\sum \mathbb{E}[\varepsilon_{i}] + \sum \mathbb{E}[\varepsilon_{i}^{2}] - \mu^{2}
+$$
+$$
+= \mu^{2} + 0 + \sum \sigma^{2} - \mu^{2} = t \sigma^{2}
+$$
+
+Podemos observar que a variância de um processo aleatório não é constante, pois vai depender de $t$.
+
+Outra parada importante é definir a covariância para $k$ lags:
+
+$$
+\text{Cov}[y_{t},y_{t-k}] = \mathbb{E} \{ (y_{t} - \mathbb{E}[y_{t}])(y_{t-k} - \mathbb{E}[y_{t-k}]) \} = \mathbb{E} [(y_{t} - \mu)(y_{t-k} - \mu )]
+$$
+
+### Estacionariedade
+
+A hipótese da estacionariedade é um caso particular do **processo estocástico**, no qual se assume que o processo está em um estado de equilíbrio. O caso dos processos estritamente estacionários (estacionariedade forte) é quando **todas** as suas propriedades (momentos) não são afetadas pelo tempo. Como essas condições são muito restritas, na grande maioria das vezes nos referimos a esse processo estocástico como **fracamente estacionário**, ou **covariância-estacionário**, ou **estacionário de segunda ordem**. Isso quer dizer que apenas a média e a variância devem ser constantes e que a covariância deve depender apenas do número de lags $(k)$:
+
+$$
+\mathbb{E}[y_{t}] = \mu
+$$
+$$
+\text{Var}[y_{t}] = \mathbb{E}[(y_{t} - \mu)^{2}] = \sigma^2
+$$
+$$
+\text{Cov}[y_{t},y_{t+k}] = \mathbb{E} [ (y_{t} - \mu)(y_{t-k} - \mu)] = \gamma_{k}
+$$
+
+### Função de autocorrelação (FAC)
+
+Ao assumir a hipótese da estacionariedade, vamos ter que a função conjunta de probabilidade de $y_{t_{1}}$ e $y_{t_{2}}$ será a mesma para todo o tempo $t_{1}$ e $t_{2}$, que será constante. Isso implica que a **covariância** entre $y_{t}$ e $y_{t+k}$ será separada apenas por $k$ intervalos de tempo (lag). Assim, a *autocovariância* ao lag $k$ é definida por:
+
+$$
+\gamma_{k} = \text{Cov}[y_{t},y_{t+k}] = \mathbb{E} [ (y_{t} - \mu)(y_{t-k} - \mu)]
+$$
+
+Da mesma forma, teremos que a **autocorrelação** é dada por:
+
+$$
+\rho_{k} = \dfrac{\mathbb{E} [ (y_{t} - \mu)(y_{t-k} - \mu)]}{\sqrt{\mathbb{E}[(y_{t} - \mu)^{2}] \mathbb{E}[(y_{t} - \mu)^{2}] }} = \dfrac{\mathbb{E} [ (y_{t} - \mu)(y_{t-k} - \mu)]}{\sigma^{2}}
+$$
+
+Como em um processo estacionário a variância é constante, vamos ter que $\gamma_{0} = \sigma^{2}$. Podemos então dizer que a autocorrelação no lag $k$ é:
+
+$$
+\rho_{k} = \dfrac{\gamma_{k}}{\gamma_{0}}
+$$
+
+E isso implica que $\rho_{0} = 1$ se $k=0$.
+
+A **Função de autocorrelação** é quando se plota um gráfico $\rho_{k}$ contra o lag $k$.
 
