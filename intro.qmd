@@ -338,9 +338,92 @@ $$
 
 $$
 = \sigma^{2} (X' X)^{-1}
-$$
+$${#eq-varcov}
 
-Agora sim temos uma matriz de variância-covariância, mas percebemos que ao longo do caminho foi necessário fazer algumas hipóteses questionáveis, como a homoscedasticidade e não-autocorrelação. Outro problema dessa matriz de variância-covariância é que nela precisamos da média do erro, mas só Deus sabe o erro... o máximo que podemos fazer é procurar uma estimativa para esse erro, e vamos chamá-lo de **resíduo**. Para diferenciar, o **resíduo** é a parte do modelo que não conseguimos explicar e o **erro** é tudo aquilo que afeta o $Y$, mas não é o $X$.
+Agora sim temos uma matriz de variância-covariância(@eq-varcov), mas percebemos que ao longo do caminho foi necessário fazer algumas hipóteses questionáveis, como a homoscedasticidade e não-autocorrelação. Outro problema dessa matriz de variância-covariância é que nela precisamos da média do erro, mas só Deus sabe o erro... o máximo que podemos fazer é procurar uma estimativa para esse erro, e vamos chamá-lo de **resíduo**. Para diferenciar, o **resíduo** é a parte do modelo que não conseguimos explicar e o **erro** é tudo aquilo que afeta o $Y$, mas não é o $X$. Então um estimador para a variancia dos resíduos é:
+$$
+\hat{\sigma}^2 = \frac{SQR}{n-k} = \frac{\sum_{i=1}^{n} u^2}{n-k}
+$$
+Onde:
+
+- $n \rightarrow$ Tamanho da amostra
+- $k \rightarrow$ Numero de coeficientes
+
+### Estimando uma regressao no python {.unnumbered}
+Primeiro, vamos começar lendo os dados. Aqui vamos utilizar o dataset *mtcars*, juntos dos pacotes que serão usados
+
+```{python}
+#| code-fold: false
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+
+
+mtcars =  sm.datasets.get_rdataset('mtcars').data
+```
+
+Vamos agora criar uma função que estime os valores dos $\hat{\beta}$ e calcula o erro padrão de cada coeficiente, isso é importante pois será usado mais tarde para o calculo das estatisticas $t$. A Função recebe como um argumento 'data' nossa base de dados; y é a variavel dependete e x são nossas variáveis explicativas, note que da maneira que foi construida nossa função y e x deve ser strings.
+```{python}
+#| code-fold: false
+def ols(data, y, x):
+    X = data[x].values
+    Y = data[y].values
+
+    # Adiciona uma coluna de "1" para gerar o intercepto
+    X = np.column_stack((np.ones(X.shape[0]), X))
+
+    # Calcula OLS
+    XtX = np.transpose(X) @ X
+    XtX_inv = np.linalg.inv(XtX)
+    XtY = np.transpose(X) @ Y
+
+    betas = XtX_inv @ XtY
+
+    # Calcula os resíduos
+    residuals = Y - X @ betas
+    sqr = np.sum(residuals**2)  # Soma dos quadrados dos resíduos
+    n, k = X.shape
+    residual_variance = sqr / (n - k)  # Variância dos resíduos
+
+    # Calcula o erro padrão dos coeficientes
+    standard_errors = np.sqrt(residual_variance * np.diag(XtX_inv))
+
+    return betas, standard_errors
+```
+tendo nossos valores em mãos, precisamos de uma função que calcule as estatisticas t
+```{python}
+#| code-fold: false
+def t_stats(betas, standard_errors):
+    # Calcula os valores-t
+    t_values = betas / standard_errors
+    return t_values
+```
+Para organizar tudo e melhorar a visibilidade dos dados, precisamos de uma função que pegue todos esses valores que crie um dataframe
+```{python}
+#| code-fold: false
+def results_dataframe(data, y, x):
+    # Calcula betas e erros padrão
+    betas, standard_errors = ols(data, y, x)
+    
+    # Calcula estatísticas t
+    t_values = t_stats(betas, standard_errors)
+    
+    # Cria um DataFrame para uma melhor visualização
+    coef_names = ['Intercept'] + x
+    results = pd.DataFrame({
+        'Coeficiente': betas,
+        'Erro Padrão': standard_errors,
+        'Estatistica t': t_values
+    }, index=coef_names)
+    
+    return results
+```
+Temos entao
+```{python}
+#| code-fold: false
+results_dataframe(mtcars, 'mpg', ['cyl', 'disp'])
+```
 
 ## Conceitos de Convergência
 
@@ -378,9 +461,6 @@ Então, $\bar{X}_{n}$ **converge em probabilidade** para $\mu$.
 :::
 
 ```{python}
-import numpy as np
-import matplotlib.pyplot as plt
-
 def lei_grandes_numeros(pop_mean, pop_std, sample_sizes):
     np.random.seed(0)  # Para reprodutibilidade
 
