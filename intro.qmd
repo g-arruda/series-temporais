@@ -220,10 +220,10 @@ $$
 \boxed{\hat{B} = (X' X)^{-1} X' Y}
 $$
 
-Então, sempre que estamos falando do estimador do **MQO**, estamos nos referindo à fórmula fechada:
+Então, sempre que estamos falando do estimador do **MQO**, estamos nos referindo à @eq-ols:
 $$
 \hat{B} = (X' X)^{-1} X' Y
-$$
+$${#eq-ols}
 
 Agora, temos que pensar da seguinte maneira: dado que conseguimos construir os estimadores, como podemos criar seus intervalos de confiança? Para isso, podemos substituir $Y$ por $XB + U$:^[Vale lembrar que $B$ sem chapéu é o melhor ajuste possível da reta, os valores que só Deus sabe.]
 $$
@@ -428,9 +428,6 @@ $$
 :::
 
 ```{python}
-import numpy as np
-import matplotlib.pyplot as plt
-
 def tcl(N, pop):
     size_sample = 100
     sample_mean = [
@@ -470,7 +467,20 @@ Uma série de tempo é caracterizada por uma sequência de observações tomada 
 
 É um processo que não depende de um termo aleatório e sempre irá ter o mesmo resultado dado um valor inicial. O processo $T_{t} = 1 + 0,1t$ é um processo determinístico, pois não depende de nenhum fator aleatório, estando sempre acompanhado de uma constante (1) e um termo de tendência determinística $(0,1t)$.
 
-Podemos observar essa função melhor, gerando o seguinte gráfico no **R**.
+Podemos observar essa função melhor, gerando o seguinte gráfico no **Python**.
+```{python}
+def trend(f):
+    x = np.linspace(0, 100, 1000) 
+    y = f(x)  
+    
+    plt.clf()
+    plt.plot(x, y)
+    plt.title(r'$f(x) = 1 + 0.1x$')
+    plt.show()
+
+# f(x) = 1 + 0.1*x
+trend(lambda x: 1 + 0.1 * x)
+```
 
 ### Processo estocástico
 
@@ -495,7 +505,7 @@ O ruído branco assume 3 propriedades:
 
 As duas primeiras propriedades dizem respeito à impossibilidade de preditividade e à ausência de autocorrelação. A terceira diz respeito à homocedasticidade, a variância ser constante.
 
-Para visualizar isso, criei uma função em **Python** que gera um conjunto de dados de ruído branco usando a função *np.random.normal* que cria um conjunto aleatório de dados de uma distribuição normal, onde $n$ é o tamanho da amostra desejado. 
+Para visualizar isso, criei uma função em **Python** que gera um conjunto de dados de ruído branco usando a função *np.random.normal()* que cria um conjunto aleatório de dados de uma distribuição normal, onde $n$ é o tamanho da amostra desejado. 
 
 ```{python}
 def white_noise(n):

@@ -420,9 +420,9 @@ X' \hat{B} = X' Y
 \]</span> <span class="math display">\[
 \boxed{\hat{B} = (X' X)^{-1} X' Y}
 \]</span></p>
-<p>Então, sempre que estamos falando do estimador do <strong>MQO</strong>, estamos nos referindo à fórmula fechada: <span class="math display">\[
+<p>Então, sempre que estamos falando do estimador do <strong>MQO</strong>, estamos nos referindo à <a href="#eq-ols" class="quarto-xref">Equação&nbsp;<span>1.1</span></a>: <span id="eq-ols"><span class="math display">\[
 \hat{B} = (X' X)^{-1} X' Y
-\]</span></p>
+\tag{1.1}\]</span></span></p>
 <p>Agora, temos que pensar da seguinte maneira: dado que conseguimos construir os estimadores, como podemos criar seus intervalos de confiança? Para isso, podemos substituir <span class="math inline">\(Y\)</span> por <span class="math inline">\(XB + U\)</span>:<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <span class="math display">\[
 \hat{B} = (X' X)^{-1} X' (XB + U)
 \]</span> <span class="math display">\[
@@ -430,9 +430,9 @@ X' \hat{B} = X' Y
 \]</span></p>
 <p>Assumindo que os dados não tenham problema de multicolinearidade perfeita, a matriz <span class="math inline">\((X' X)^{-1}\)</span> deve existir para que <span class="math inline">\(I = (X' X)^{-1} X' X\)</span>: <span id="eq-endo"><span class="math display">\[
 \hat{B} = B + (X' X)^{-1} X' U
-\tag{1.1}\]</span></span></p>
-<p>Observamos na equação <a href="#eq-endo" class="quarto-xref">Equação&nbsp;<span>1.1</span></a> que a componente do estimador influenciada pelo erro, especificamente <span class="math inline">\(X' U\)</span>, ilustra uma premissa importante do modelo: <span class="math inline">\(\mathbb{E}(X | U) = 0\)</span>. Isso implica que, idealmente, todas as variáveis explicativas deveriam ser exógenas, não apresentando qualquer correlação com o termo de erro. Mas, é importante reconhecer que, na prática, alcançar uma exogeneidade completa é praticamente inviável; assim, é realista esperar que qualquer modelo econômico possa manifestar algum nível, mesmo que mínimo, de endogeneidade.</p>
-<p>Subtraind os dois lados da <a href="#eq-endo" class="quarto-xref">Equação&nbsp;<span>1.1</span></a> por <span class="math inline">\(-B\)</span> e pós-multiplicando por <span class="math inline">\((\hat{B} - B)'\)</span>: <span class="math display">\[
+\tag{1.2}\]</span></span></p>
+<p>Observamos na equação <a href="#eq-endo" class="quarto-xref">Equação&nbsp;<span>1.2</span></a> que a componente do estimador influenciada pelo erro, especificamente <span class="math inline">\(X' U\)</span>, ilustra uma premissa importante do modelo: <span class="math inline">\(\mathbb{E}(X | U) = 0\)</span>. Isso implica que, idealmente, todas as variáveis explicativas deveriam ser exógenas, não apresentando qualquer correlação com o termo de erro. Mas, é importante reconhecer que, na prática, alcançar uma exogeneidade completa é praticamente inviável; assim, é realista esperar que qualquer modelo econômico possa manifestar algum nível, mesmo que mínimo, de endogeneidade.</p>
+<p>Subtraind os dois lados da <a href="#eq-endo" class="quarto-xref">Equação&nbsp;<span>1.2</span></a> por <span class="math inline">\(-B\)</span> e pós-multiplicando por <span class="math inline">\((\hat{B} - B)'\)</span>: <span class="math display">\[
 (\hat{B} - B)(\hat{B} - B)' = (X' X)^{-1} X' U[(X' X)^{-1} X' U]'
 \]</span></p>
 <p>Desenvolvendo a parte esquerda dessa igualdade, temos que: <span class="math display">\[
@@ -533,7 +533,7 @@ UU' = \begin{bmatrix}
 \]</span></p>
 <p>Então, <span class="math inline">\(\bar{X}_{n}\)</span> <strong>converge em probabilidade</strong> para <span class="math inline">\(\mu\)</span>.</p>
 </div>
-<div id="958e3854" class="cell" data-execution_count="1">
+<div id="33a8f623" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -581,39 +581,36 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 \lim_{n \to \infty} \mathbb{P}(Z_n \leq z) = \Phi(z) = \int_{-\infty}^{z} \frac{1}{\sqrt{2 \pi}} e^{-x^2/2} \, dx.
 \]</span></p>
 </div>
-<div id="93837e0b" class="cell" data-execution_count="2">
+<div id="38dab55a" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tcl(N, pop):</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    size_sample <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    sample_mean <span class="op">=</span> [</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        np.random.choice(pop, size<span class="op">=</span>size_sample, replace<span class="op">=</span><span class="va">True</span>).mean() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(N)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(sample_mean)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_tcl(N_values, pop):</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="bu">len</span>(N_values), figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">5</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, N <span class="kw">in</span> <span class="bu">enumerate</span>(N_values):</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        sample_means <span class="op">=</span> tcl(N, pop)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        axs[i].hist(sample_means, bins<span class="op">=</span><span class="dv">30</span>, edgecolor<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        axs[i].set_title(<span class="ss">f'</span><span class="sc">{</span>N<span class="sc">}</span><span class="ss"> Amostras'</span>, fontsize<span class="op">=</span><span class="dv">21</span>)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        axs[i].set_xlabel(<span class="st">'Média da Amostra'</span>, fontsize<span class="op">=</span><span class="dv">18</span>)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        axs[i].set_ylabel(<span class="st">'Frequência'</span>, fontsize<span class="op">=</span><span class="dv">18</span>)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tcl(N, pop):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    size_sample <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    sample_mean <span class="op">=</span> [</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        np.random.choice(pop, size<span class="op">=</span>size_sample, replace<span class="op">=</span><span class="va">True</span>).mean() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(N)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(sample_mean)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_tcl(N_values, pop):</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="bu">len</span>(N_values), figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">5</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, N <span class="kw">in</span> <span class="bu">enumerate</span>(N_values):</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        sample_means <span class="op">=</span> tcl(N, pop)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        axs[i].hist(sample_means, bins<span class="op">=</span><span class="dv">30</span>, edgecolor<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        axs[i].set_title(<span class="ss">f'</span><span class="sc">{</span>N<span class="sc">}</span><span class="ss"> Amostras'</span>, fontsize<span class="op">=</span><span class="dv">21</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        axs[i].set_xlabel(<span class="st">'Média da Amostra'</span>, fontsize<span class="op">=</span><span class="dv">18</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        axs[i].set_ylabel(<span class="st">'Frequência'</span>, fontsize<span class="op">=</span><span class="dv">18</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout(rect<span class="op">=</span>[<span class="dv">0</span>, <span class="fl">0.03</span>, <span class="dv">1</span>, <span class="fl">0.95</span>])</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout(rect<span class="op">=</span>[<span class="dv">0</span>, <span class="fl">0.03</span>, <span class="dv">1</span>, <span class="fl">0.95</span>])</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">0</span>)</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Gerar a população</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>pop <span class="op">=</span> np.random.uniform(size<span class="op">=</span><span class="dv">1000</span>)</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Plota um histograma com diferentes números de amostras</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>plot_tcl([<span class="dv">50</span>, <span class="dv">200</span>, <span class="dv">1000</span>], pop)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Gerar a população</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>pop <span class="op">=</span> np.random.uniform(size<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Plota um histograma com diferentes números de amostras</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>plot_tcl([<span class="dv">50</span>, <span class="dv">200</span>, <span class="dv">1000</span>], pop)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -630,7 +627,30 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 <section id="processo-determinístico" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="processo-determinístico"><span class="header-section-number">1.3.1</span> Processo determinístico</h3>
 <p>É um processo que não depende de um termo aleatório e sempre irá ter o mesmo resultado dado um valor inicial. O processo <span class="math inline">\(T_{t} = 1 + 0,1t\)</span> é um processo determinístico, pois não depende de nenhum fator aleatório, estando sempre acompanhado de uma constante (1) e um termo de tendência determinística <span class="math inline">\((0,1t)\)</span>.</p>
-<p>Podemos observar essa função melhor, gerando o seguinte gráfico no <strong>R</strong>.</p>
+<p>Podemos observar essa função melhor, gerando o seguinte gráfico no <strong>Python</strong>.</p>
+<div id="e9f9d044" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> trend(f):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dv">1000</span>) </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> f(x)  </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    plt.clf()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    plt.plot(x, y)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="vs">r'$f(x) = 1 + 0.1x$'</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># f(x) = 1 + 0.1*x</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>trend(<span class="kw">lambda</span> x: <span class="dv">1</span> <span class="op">+</span> <span class="fl">0.1</span> <span class="op">*</span> x)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_files/figure-html/cell-4-output-1.png" width="566" height="432" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="processo-estocástico" class="level3" data-number="1.3.2">
 <h3 data-number="1.3.2" class="anchored" data-anchor-id="processo-estocástico"><span class="header-section-number">1.3.2</span> Processo estocástico</h3>
@@ -652,24 +672,24 @@ Z_n = \frac{X_n - \mu}{\sqrt{\frac{\sigma^2}{n}}} = \frac{\sqrt{n}(X_n - \mu)}{\
 </ul>
 <p>As duas primeiras propriedades dizem respeito à impossibilidade de preditividade e à ausência de autocorrelação. A terceira diz respeito à homocedasticidade, a variância ser constante.</p>
 <p>Para visualizar isso, criei uma função em <strong>Python</strong> que gera um conjunto de dados de ruído branco usando a função <em>np.random.normal</em> que cria um conjunto aleatório de dados de uma distribuição normal, onde <span class="math inline">\(n\)</span> é o tamanho da amostra desejado.</p>
-<div id="e448c741" class="cell" data-execution_count="3">
+<div id="32d76d43" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Mostrar código</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> white_noise(n):</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    np.random.seed(<span class="dv">0</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    white_noise <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="dv">1</span>, n)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    plt.clf()</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    plt.plot(white_noise)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    plt.axhline(<span class="dv">0</span>, color <span class="op">=</span> <span class="st">'black'</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>white_noise(<span class="dv">100</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> white_noise(n):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    white_noise <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="dv">1</span>, n)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    plt.clf()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    plt.plot(white_noise)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    plt.axhline(<span class="dv">0</span>, color <span class="op">=</span> <span class="st">'black'</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>white_noise(<span class="dv">100</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intro_files/figure-html/cell-4-output-1.png" width="569" height="411" class="figure-img"></p>
+<p><img src="intro_files/figure-html/cell-5-output-1.png" width="569" height="411" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -705,36 +725,36 @@ y_{1} = \gamma + y_{0} + \varepsilon_{1}
 <p><span class="math display">\[
 y_{t} = \gamma t + \sum_{i=1}^{t} \varepsilon_{i}
 \]</span></p>
-<div id="6f620649" class="cell" data-execution_count="4">
+<div id="3e32b05e" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Mostrar código</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_walk(trend, n):</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    np.random.seed(<span class="dv">0</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    yt <span class="op">=</span> np.zeros(n)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    epsilon <span class="op">=</span> np.random.normal(<span class="dv">0</span>,<span class="dv">1</span>,n)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> np.arange(<span class="dv">1</span>,n):</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        yt[t] <span class="op">=</span> t <span class="op">*</span> trend <span class="op">+</span> np.<span class="bu">sum</span>(epsilon[:t<span class="op">+</span><span class="dv">1</span>])</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> yt</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_rw(trend_list, t):</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    plt.clf()</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> trend <span class="kw">in</span> trend_list:</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        rw <span class="op">=</span> random_walk(trend, t)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        plt.plot(rw, label<span class="op">=</span><span class="ss">f'Tendencia = </span><span class="sc">{</span>trend<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>trend_list <span class="op">=</span> [<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="op">-</span><span class="fl">0.2</span>]</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>plot_rw(trend_list, t<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_walk(trend, n):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    yt <span class="op">=</span> np.zeros(n)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    epsilon <span class="op">=</span> np.random.normal(<span class="dv">0</span>,<span class="dv">1</span>,n)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> np.arange(<span class="dv">1</span>,n):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        yt[t] <span class="op">=</span> t <span class="op">*</span> trend <span class="op">+</span> np.<span class="bu">sum</span>(epsilon[:t<span class="op">+</span><span class="dv">1</span>])</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> yt</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_rw(trend_list, t):</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    plt.clf()</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> trend <span class="kw">in</span> trend_list:</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        rw <span class="op">=</span> random_walk(trend, t)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        plt.plot(rw, label<span class="op">=</span><span class="ss">f'Tendencia = </span><span class="sc">{</span>trend<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>trend_list <span class="op">=</span> [<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="op">-</span><span class="fl">0.2</span>]</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>plot_rw(trend_list, t<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intro_files/figure-html/cell-5-output-1.png" width="577" height="411" class="figure-img"></p>
+<p><img src="intro_files/figure-html/cell-6-output-1.png" width="577" height="411" class="figure-img"></p>
 </figure>
 </div>
 </div>
