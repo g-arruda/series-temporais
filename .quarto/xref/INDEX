@@ -10,5 +10,11 @@
   },
   "references.qmd": {
     "references.html": "c1e0a0c6"
+  },
+  "cap-arima.qmd": {
+    "cap-arima.html": "213393d3"
+  },
+  "cap-vol.qmd": {
+    "cap-vol.html": "5b33a469"
   }
 }

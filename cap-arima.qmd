@@ -1,0 +1,436 @@
+# ARIMA
+
+# Modelos ARIMA
+Antes de chegar no modelo ARIMA, vou passar pelo AR, dps o MA.
+
+## Modelos lineares estacionários
+
+### Modelo Autorregressivo (AR)
+
+Um processo é dito autoregressivo quando ele carrega consigo msm uma certa persistência, quer dizer que o passado influencia o presente, quando apenas o período anterior influencia o atual vamos ter um AR(1)
+$$
+\begin{aligned}
+	y_{t}=\phi y_{t-1} + \varepsilon_{t}
+\end{aligned}
+$$
+onde $\phi$ é um coeficiente tbm chamado de **peso**, seria o peso da influencia de um período no outro. Um caso especial do processo _autoregressivo_ é o AR(p)
+$$
+\begin{aligned}
+	y_{t}=\phi_{1} y_{t-1} + \phi_{2} y_{t-2} + ... + \phi_{p} y_{t-p} + \varepsilon_{t}
+\end{aligned}
+$$
+onde todos os pesos $\phi$ são diferentes de 0.
+
+Podemos reescrever esse AR(p) usando o **operador lag**
+$$
+\begin{aligned}
+	(1 - \phi_{1}L - \phi_{2}L^{2} - ... - \phi_{p}L^{p} )y_{t}=\varepsilon_{t}
+\end{aligned}
+$$
+ou então
+$$
+\begin{aligned}
+	\phi(L) y_{t} = \varepsilon_{t}
+\end{aligned}
+$$
+onde $\phi(L) = 1 - \phi_{1}L - \phi_{2}L^{2} - ... - \phi_{p}L^{p}$.
+
+O processo _autoregressivo_ deve respeitar algumas condições para ser estacionário. Seja o processo AR(1) para exemplificar
+$$
+\begin{aligned}
+	(1-\phi L)y_{t} = \varepsilon_{t}
+\end{aligned}
+$$
+e para que esse processo seja estacionário, devemos ter que todas as raízes de $|\phi(L)| > 1$ e isso implica que o parâmetro $\phi$ do processo AR(1) deve ser $ < 1$ para ser estacionário. Como a raiz de $1-\phi L = 0$ é $L=\phi^{-1}$, isso quer dizer que a raiz **está fora do circulo unitário**, já que $|\phi| < 1$.
+
+O mesmo raciocínio pode ser levado para o processo autorregressivo de ordens superiores, seja o caso do AR(p)
+$$
+\begin{aligned}
+	\phi(L)y_{t} = (1 - \phi_{1}L - \phi_{2}L^{2} - ... - \phi_{p}L^{p} )y_{t}=\varepsilon_{t}
+\end{aligned}
+$$
+onde a condição de estacionaridade é que **TODAS AS RAÍZES** de $\phi(L)=0$ devem ser menores que 1 em módulo, estar **fora do círculo unitário**. Existem alguns testes para ver se uma série é estacionária ou não, como o do Dickey-Fuller e KPSS, que serão abordados mais à frente.
+
+Um processo autorregressivo é dito **inversível** quando podemos reescrever o **AR(1)** em forma de **MA$(\infty)$**, isso é usado em alguns casos como o das funções de impulso e resposta que são usadas quando queremos avaliar o quanto um choque em uma variável afeta a outra. Seja então o processo AR(1)
+$$
+\begin{aligned}
+	y_{t} = \phi y_{t-1} + \varepsilon_{t}
+\end{aligned}
+$$
+escrevendo na notação do operador lag
+$$
+\begin{aligned}
+	(1-\phi L)y_{t} &= \varepsilon_{t} \\
+	y_{t} &= \dfrac{\varepsilon_{t}}{(1-\phi L)}
+\end{aligned}
+$$
+podemos ver que essa expressão tem a forma de um somatório de PG infinita e a única condição para que isso seja verdade é a de que $\phi \leq 1$ para que ela seja convergente. Podemos então dizer que no caso da **série ser estacionária podemos dizer que ela é inversível**, sendo $\varepsilon_{t}$ o primeiro elemento e $\phi L$ a razão. Então é a mesma coisa que dizer que isso é
+$$
+\begin{aligned}
+	y_{t} = \varepsilon_{t} + \phi L \varepsilon_{t} + \phi^{2}L^{2} \varepsilon_{t} + ...
+\end{aligned}
+$$
+ou ainda
+$$
+\begin{aligned}
+	y_{t} &= \varepsilon_{t} + \phi \varepsilon_{t-1} + \phi^{2} \varepsilon_{t-2} + ... \\
+	y_{t} &= \sum_{i=0}^{\infty} \phi^{i}\varepsilon_{t-i}
+\end{aligned}
+$$
+
+**Autocorrelação:** De acordo com @box2015time [p. 58], temos que o caso de um AR(1) satisfaz a seguinte condição
+$$
+\begin{aligned}
+	\rho_{k}=\phi_{1} \rho_{k-1}
+\end{aligned}
+$$
+então para $k=1$
+$$
+\begin{aligned}
+	 \rho_{1} = \phi_{1}
+\end{aligned}
+$$
+e resolvendo recursivamente
+$$
+\begin{aligned}
+	&\rho_{2} = \phi_{1} \rho_{1} = \phi_{1}^{2} \\
+	&\rho_{3} = \phi_{1} \rho_{2} = \phi_{1} \phi_{1}^{2} = \phi_{1}^{3} \\
+	\therefore \ &\rho_{k}=\phi_{1}^{k}
+\end{aligned}
+$$
+
+Da mesma maneira, podemos ver que a autocorrelação de um **AR(2)** satisfaz a seguinte condição
+$$
+\begin{aligned}
+	\rho_{k}=\phi_{1} \rho_{k-1} + \phi_{2} \rho_{k-2}
+\end{aligned}
+$$
+então para $k=1$
+$$
+\begin{aligned}
+	\rho_{1} = \phi_{1} + \phi_{2}\rho_{-1}
+\end{aligned}
+$$
+como a correlação é simétrica, podemos trocar $\rho_{-1} \rightarrow \rho_{1}$
+$$
+\begin{aligned}
+	\rho_{1} &= \phi_{1} + \phi_{2}\rho_{1} \\
+	\rho_{1} &= \dfrac{\phi_{1}}{1-\phi_{2}}
+\end{aligned}
+$$
+e resolvendo recursivamente
+$$
+\begin{aligned}
+	&\rho_{2} = \phi_{1} \rho_{1} + \phi_{2} \rho_{0} \\
+	&\rho_{2} = \dfrac{\phi_{1}^{2}}{1-\phi_{2}} + \phi_{2} \\
+	&\rho_{3} = \phi_{1} \rho_{2} + \phi_{2} \rho_{1} \\
+	&\rho_{3} = \phi_{1} \bigg[\dfrac{\phi_{1}^{2}}{1-\phi_{2}} + \phi_{2}\bigg] + \dfrac{\phi_{1} \phi_{2}}{1-\phi_{2}} \\
+	& \qquad \vdots
+\end{aligned}
+$$
+*** terminar essa parte mais tarde****
+\vspace{8pt}
+
+**_Variância:_** Uma maneira fácil de se calcular a variância de um processo AR(1) é usando o operador da variância **Var[.]**:
+$$
+\begin{aligned}
+	\text{Var}[y_{t}] &= \text{Var}[\phi y_{t-1}] + \text{Var}[\varepsilon_{t}] \\
+	\text{Var}[y_{t}] &= \phi^{2} \text{Var}[y_{t}] + \text{Var}[\varepsilon_{t}] \\
+	\text{Var}[y_{t}] &= \phi^{2} \text{Var}[y_{t}] + \sigma_{\varepsilon}^{2} \\
+	(1-\phi^{2}) \text{Var}[y_{t}] &= \sigma_{\varepsilon}^{2} \\
+	\sigma_{y}^{2} &= \dfrac{\sigma_{\varepsilon}^{2}}{(1-\phi^{2})}
+\end{aligned}
+$$ 
+se vc observar o valor de $2+2$ a variância é negativa, oq seria um absurdo; se $2+2$ a variância vai para infinito e é por isso que quando o processo é não estacionário ele apresenta variância infinita.
+
+**EXEMPLO:** Seja a modelo $y_{t}=-0,3 y_{t-1} + 0,6 y_{t-2} + \varepsilon_{t}$, verifique se é estacionário.
+
+Podemos reescrever esse modelo usando o operador lag
+$$
+\begin{aligned}
+	(1+0,3L-0,6L^{2}) y_{t} = \varepsilon_{t}
+\end{aligned}
+$$
+temos então aqui nesse exemplo que $\phi(L) = 1+0,3L-0,6L^{2}$ e como a condição para que o processo seja estacionário as raízes de $\phi(L)=0$ tem que ser maior que 1 em módulo. Vamos ter que
+$$
+\begin{aligned}
+	L &= \dfrac{-0,3 \pm \sqrt{0,3^2 - 4(-0,6)}}{2(-0,6)} \\
+	  &= \dfrac{-0,3 \pm 1,578}{-1,2} \ \Rightarrow \ L=-1,065 \ \text{e} \ 1,565
+\end{aligned}
+$$
+sendo todas as raízes maiores que um em modulo, então o processo é estacionário.
+
+
+### Modelo de Média móvel (MA)
+
+O modelo de média móvel é uma extensão do processo de ruído branco, onde os parâmetros de peso são representados pelo símbolo $\theta$. O modelo é escrito da seguinte forma:
+$$
+\begin{aligned}
+	y_{t} = \varepsilon_{t} + \theta_{1}\varepsilon_{t-1} + \theta_{2}\varepsilon_{t-2} + \dots + \theta_{q}\varepsilon_{t-q}
+\end{aligned}
+$$
+
+O motivo pelo qual se usa esse tipo de modelo é que, em economia, estamos diante de diversos choques ao longo do tempo, seja por uma greve, desastres naturais, decisões do governo, etc. Esses choques normalmente não terão apenas um efeito imediato na série, muitas vezes apresentando um efeito contemporâneo, demorando a ser dissipado e tendo efeito ao longo do tempo em vários períodos consecutivos.
+
+Seja o modelo de MA(q) com $\mu = 0$ com esperança
+$$
+\begin{aligned}
+	\mathbb{E}[y_{t}] &= \mathbb{E}[\varepsilon_{t} + \theta_{1}\varepsilon_{t-1} + \theta_{2}\varepsilon_{t-2} + \dots + \theta_{q}\varepsilon_{t-q}] \\
+	 &= 0
+\end{aligned}
+$$
+e variância
+$$
+\begin{aligned}
+	\text{Var}[y_{t}] &= \text{Var}[\varepsilon_{t} + \theta_{1}\varepsilon_{t-1} + \theta_{2}\varepsilon_{t-2} + \dots + \theta_{q}\varepsilon_{t-q}] \\
+	&= \text{Var}[\varepsilon_{t}] + \text{Var}[\theta_{1}\varepsilon_{t-1}] + \text{Var}[\theta_{2}\varepsilon_{t-2}] + \dots + \text{Var}[\theta_{q}\varepsilon_{t-q}] \\
+	&= \sigma_{\varepsilon}^{2} + \theta_{1}^{2}\sigma_{\varepsilon}^{2} + \theta_{2}^{2}\sigma_{\varepsilon}^{2} + \dots + \theta_{q}^{2}\sigma_{\varepsilon}^{2} \\
+	&= (1 + \theta_{1}^{2} + \theta_{2}^{2} + \dots + \theta_{q}^{2}) \sigma_{\varepsilon}^{2}
+\end{aligned}
+$$
+nota-se então que a variância de um modelo MA(2) é igual a $\text{Var}[y_{t}] = (1 + \theta_{1}^{2} + \theta_{2}^{2}) \sigma_{\varepsilon}^{2}$.
+
+**Invertibilidade:** As condições de invertibilidade do modelo são iguais às condições para que um modelo AR(p) seja estacionário, ou seja, $\abs{\theta} < 1$, ou que as raízes de $\theta(L) = 0$ sejam maiores que 1 em módulo.
+
+**Função de autocorrelação:** Vamos ter a seguinte fórmula para o caso geral de um modelo MA(q),
+$$
+\begin{aligned}
+	\rho_k= \begin{cases}\dfrac{-\theta_k+\theta_1 \theta_{k+1}+\dots+\theta_{q-k} \theta_q}{1+\theta_1^2+\dots+\theta_q^2} & k=1,2, \dots, q \\ 0 & k>q\end{cases}
+\end{aligned}
+$$
+onde temos que $\gamma_{0} = (1+\theta_1^2+\dots+\theta_q^2)\sigma_{\varepsilon}^{2}$ e que $\gamma_{k} = (-\theta_k+\theta_1 \theta_{k+1}+\dots+\theta_{q-k} \theta_q)\sigma_{\varepsilon}^{2}$.
+
+Uma coisa a se notar nessa equação é que, quando tivermos que o número de lags da função de autocorrelação for maior que a ordem do modelo, a FAC será igual a zero. Seja um modelo MA(2), então $\rho_{3},\dots,\rho_{k} = 0$.
+
+Essa equação pode ser aplicada para modelos MA(1) também:
+$$
+\begin{aligned}
+	\rho_k= \begin{cases}
+		\dfrac{-\theta_1}{1+\theta_1^2} & k=1 \\
+		0 & k>1
+	\end{cases}
+\end{aligned}
+$$
+De forma análoga, para um MA(2) vamos ter:
+$$
+\begin{aligned}
+	& \rho_1=\dfrac{-\theta_1 + \theta_{1}\theta_{2}}{1+\theta_1^2+\theta_2^2} \\
+	& \rho_2=\dfrac{-\theta_2}{1+\theta_1^2+\theta_2^2}
+\end{aligned}
+$$
+
+## Modelos lineares não-estacionários
+
+A maioria das séries temporais apresenta não estacionariedade, o que significa que em um modelo ARMA, se as raízes de $\phi(L) = 0$ estiverem fora do círculo unitário, a série é dita estacionária, mas quando estão fora do círculo unitário, ela terá um comportamento explosivo, sendo não estacionária. Um modelo ARMA sem sazonalidade pode ser escrito da seguinte forma:
+$$
+\begin{aligned}
+	\phi(L) y_{t} = \theta(L)\varepsilon_{t}
+\end{aligned}
+$$
+Se $\phi(L)$ for um operador autorregressivo não estacionário, tal que $d$ raízes de $\phi(L)=0$ são unitárias e o resto está fora do círculo unitário, esse modelo pode ser escrito como:
+$$
+\begin{aligned}
+	\phi(L)(1-L)^{d} y_{t} = \theta(L)\varepsilon_{t}
+\end{aligned}
+$$
+onde $\phi(L)$ se torna um operador autorregressivo estacionário. Nesse caso, foi feita a separação de todas as raízes que estão fora do círculo unitário das raízes que estão dentro do círculo unitário. Sabendo que a diferenciação torna as raízes estacionárias, podemos usar o operador $\nabla^{d} = (1-L)^{d}$ para $d \geq 1$; aqui $\nabla$ é chamado de operador de diferenciação.
+$$
+\begin{aligned}
+	\phi(L) \nabla^{d} y_{t} = \theta(L)\varepsilon_{t}
+\end{aligned}
+$$
+Esse processo será conhecido como integração, o I do ARIMA$(p,d,q)$, onde a ordem de integração desse processo é dada pelo valor de $d$. E se chamarmos $w_{t}= \nabla^{d} y_{t}$, o processo passa a ser escrito da seguinte forma:
+$$
+\begin{aligned}
+	\phi(L) w_{t} = \theta(L)\varepsilon_{t}
+\end{aligned}
+$$
+
+Abaixo podemos ver alguns exemplos de processo ARIMA:
+
+1. O modelo ARIMA(0,1,1):
+    $$
+    \begin{aligned}
+        \nabla y_{t} &= \varepsilon_{t} - \theta_{1}\varepsilon_{t-1}\\
+                    &= (1-\theta_{1}L)\varepsilon_{t}
+    \end{aligned}
+    $$
+    onde $p=0$, $d=1$, $q=1$, $\phi(L)=1$, $\theta(L)=(1-\theta_{1}L)$.
+
+2. O modelo ARIMA(1,1,1):
+$$
+    \begin{aligned}
+        \nabla y_{t} - \phi_{1}\nabla y_{t-1} &= \varepsilon_{t} - \theta_{1}\varepsilon_{t-1}\\
+        (1 - \phi_{1}L)\nabla y_{t} &= (1-\theta_{1}L)\varepsilon_{t}
+    \end{aligned}
+    $$
+    onde $p=1$, $d=1$, $q=1$, $\phi(L)=(1 - \phi_{1}L)$, $\theta(L)=(1-\theta_{1}L)$.
+
+
+**EXAMPLE:** Seja a modelo $y_{t}=0,1 y_{t-1} + 0,9 y_{t-2} + \varepsilon_{t}$, verifique se é estacionário.
+
+Reescrevendo usando o operador lag:
+$$
+\begin{aligned}
+(1-0,1L-0,9L^{2})y_{t}&=\varepsilon_{t} \\
+(0,9)(1,1111-0,1111L-L^{2})y_{t}&=\varepsilon_{t}
+\end{aligned}
+$$
+Usando a fórmula quadrática, vamos encontrar que as raízes de $\phi(L)$ são -1,1111 e 1; como uma das raízes é igual a 1, esse processo é não estacionário. Reescrevendo, temos:
+$$
+\begin{aligned}
+(0,9)(L+1,1111)(L-1)y_{t}&=\varepsilon_{t} \\
+(1+0,9L)(L-1)y_{t}&=\varepsilon_{t} \\
+(1+0,9L)(1-L)y_{t}&=\varepsilon_{t} \\
+(1+0,9L)\nabla y_{t}&=\varepsilon_{t}
+\end{aligned}
+$$
+Assim sendo um modelo ARIMA(1,1,1) pois temos $\nabla y_{t}$ que corresponde à integração de ordem 1 (I(1)). Também pode ser reescrito da seguinte maneira:
+$$
+\begin{aligned}
+(1+0,9L)w_{t}&=\varepsilon_{t}
+\end{aligned}
+$$
+Mas note, que como aqui não temos o operador de diferenciação, este modelo é um ARMA(1,1).
+
+# Identificação do Modelo
+
+Uma das formas de se identificar qual o melhor modelo usar é por meio dos critérios de informação de Akaike (AIC) ou o critério de informação Schwartz (\textit{Bayesian Information Criterion} - BIC). A ideia por trás do critério de informação é tentar mensurar a qualidade de um modelo de acordo com a informação que ele carrega e também eles prezam pela simplicidade, quer dizer que quanto mais parâmetros e mais lags for adicionado, mais penalizado será o modelo de acordo com o critério de informação, prezando sempre por um modelo mais parcimonioso.
+
+O ideal é que o AIC e BIC sejam o menor possível (vale notar que pode ser negativo). Quanto melhor for o ajuste do modelo, mais AIC e BIC irão se aproximar de $-\infty$. O critério de informação pode ser usado para comparar dois modelos; Um modelo A pode ser dito melhor que o B, se o critério de informação (AIC ou BIC) do A for menor que o do B, lembrando que para essa comparação, o ideal é que os modelos tenham o mesmo tamanho de amostra. São calculados da seguinte maneira:
+$$
+\begin{aligned}
+\text{AIC} &= \dfrac{-2 \ln(L)}{T} + \dfrac{2n}{T} \\
+\text{BIC} &= \dfrac{-2 \ln(L)}{T} + \dfrac{n \ln(T)}{T}
+\end{aligned}
+$$
+Onde $n=p+q+1$ que é a soma dos parâmetros do modelo; $T$ é o tamanho da amostra; $L$ é o valor máximo da função de máxima verossimilhança.
+
+Note que a diferença entre eles é que no BIC vamos ter $\ln(T)$ ao invés do 2 multiplicando o $n$ e como $\ln(T)$ sempre será maior que 2, quer dizer que o BIC é mais parcimonioso que o AIC; o custo marginal de se adicionar regressores é maior no BIC do que no AIC.
+
+# Testes do Modelo
+
+## Testes de Raiz Unitária - Dick-Fuller
+
+O teste de Dick-Fuller é o teste mais usado para detectar a presença de raiz unitária, na qual a hipótese nula é se a série é um passeio aleatório, contra a hipótese alternativa se a série é estacionária. Para mostrar o teste, vamos usar um AR(1),
+$$
+\begin{aligned}
+y_{t} &= \phi y_{t-1} + \varepsilon_{t}, \quad \text{onde} \quad \varepsilon_{t} \sim \text{i.i.d. } \mathcal{N}(0,\: \sigma^2)
+\end{aligned}
+$$
+onde já sabemos que se $\phi = 1$ o processo é um passeio aleatório e se $\phi < 1$ ele é um processo estacionário. Aqui vamos ter que esse $\phi$ é um parâmetro estimado por MQO, por isso precisamos aplicar um teste a esse parâmetro para saber o quão confiável é esse coeficiente que foi estimado, para isso, Dick-Fuller aplicaram um teste de regressão que é derivado desse modelo AR(1), subtraindo $y_{t-1}$ de ambos os lados:
+$$
+\begin{aligned}
+y_{t} - y_{t-1} &= \phi y_{t-1} - y_{t-1} + \varepsilon_{t} \\
+\nabla y_{t} &= (\phi - 1)y_{t-1} + \varepsilon_{t}
+\end{aligned}
+$$
+Substituindo $\delta = \phi - 1$, temos:
+$$
+\begin{aligned}
+\nabla y_{t} &= \delta y_{t-1} + \varepsilon_{t}
+\end{aligned}
+$$
+Usando essa equação, pode-se investigar que se $\phi=1 \Rightarrow \delta =0$ e isso implica que $\nabla y_{t} = \varepsilon_{t}$ sendo um passeio aleatório; caso contrário, se $\phi < 1 \Rightarrow \delta \neq 0$ sendo um processo estacionário. Então a ideia desse teste de DF é olhar para o $\delta$, onde:
+$$
+\begin{aligned}
+H_0 \: : \: \delta = 0
+\end{aligned}
+$$
+Se a hipótese nula não for rejeitada (satisfeita ou aceita), vamos ter que $y_{t}$ é integrado de ordem 1, tal que $y_{t} \: \sim \: I(1)$, pois será estacionário após uma defasagem. A hipótese alternativa tem a seguinte forma:
+$$
+\begin{aligned}
+H_a \: : \: \delta \neq 0
+\end{aligned}
+$$
+Então se a hipótese nula for rejeitada, implica que $y_{t} \: \sim \: I(1)$, sendo a série estacionária. O interessante aqui é que com essa regressão de teste, conseguimos aplicar uma estatística de teste $(\tau)$ em $\delta$, podendo assim comparar essa estatística do modelo com valores já calculados por Dick-Fuller, chamados de $\tau_{c}$ (tau calculado), assim:
+- Se $\tau < \tau_{c}$ $\Rightarrow$ rejeita $H_0$ (não estacionário)
+- Se $\tau > \tau_{c}$ $\Rightarrow$ **NÃO** rejeita $H_0$ (estacionário)
+
+Esse valor de teste é um simples teste $t$, onde:
+$$
+\begin{aligned}
+\hat{t}_{DF} &= \dfrac{\hat{\delta}}{SE(\hat{\delta})} = \dfrac{\phi-1}{SE(\phi)}
+\end{aligned}
+$$
+SE corresponde ao *standard error* (erro padrão).
+
+Esse teste de DF pode ser modificado para caso a série tenha um drift, adicionando uma constante e um termo de tendência, assumindo a seguinte forma
+$$
+\begin{aligned}
+\nabla y_{t} &= \beta_{1} + \beta_{2}t + \delta y_{t-1} + \varepsilon_{t}
+\end{aligned}
+$$
+
+a hipótese nula permanece a mesma. Para saber se essa constante e o termo de tendência são significantes, temos que olhar a estatística de teste $t$ de cada beta, ou olhar para seus \textit{p-valores}.
+
+Esse teste de Dick-Fuller é simples e não permite testar a persistência do processo, pois os resíduos podem ser autocorrelacionados. Assim, foi desenvolvido o teste de **Dick-Fuller Aumentado** (ADF) para controlar essa autocorrelação nos resíduos, possibilitando testar valores de lag maiores (AR(.) de ordem superior). Vamos considerar a regressão de teste para um AR(1)
+$$
+\begin{aligned}
+\nabla y_{t} &= \beta_{1} + \beta_{2}t + \delta y_{t-1} + \varepsilon_{t}
+\end{aligned}
+$$
+
+se acharmos que $\nabla y_{t}$ segue um AR(2), a regressão de teste será
+$$
+\begin{aligned}
+\nabla y_{t} &= \beta_{1} + \beta_{2}t + \delta y_{t-1} + \gamma \nabla y_{t-1} + \varepsilon_{t}
+\end{aligned}
+$$
+
+generalizando isso para um processo AR(p), temos
+$$
+\begin{aligned}
+\nabla y_{t} &= \beta_{1} + \beta_{2}t + \delta y_{t-1} + \sum_{i=0}^{m} \gamma_{i} \nabla y_{t-i} + \varepsilon_{t}
+\end{aligned}
+$$
+
+Aqui, a hipótese é a mesma, sendo $H_0: \delta = 0$ não estacionário e $H_a: \delta < 0$ estacionário. A significância dos $\gamma$ pode ser testada através de um teste $t$.
+
+### Teste de autocorrelação - **Ljung–Box** e **Box-Pierce**
+O teste de Ljung–Box pode ser definido como
+
+- $H_0:$ os erros são independentemente distribuídos
+- $H_A:$ os erros **NÃO** são independentemente distribuídos; existe correlação serial
+
+Não há muito mais o que comentar nesse teste, apenas mostrar que a estatística de teste do Ljung–Box é
+$$
+\begin{aligned}
+LB(k) = N(N+2)\sum_{j=1}^{k}(N-j)^{-1} \hat{\rho}_{j}^{2}(\hat{\varepsilon})
+\end{aligned}
+$$
+
+e que o teste Q (Box-Pierce) é
+$$
+\begin{aligned}
+Q(k) = N \sum_{j=1}^{k}\hat{\rho}_{j}^{2}(\hat{\varepsilon})
+\end{aligned}
+$$
+
+onde $\rho_{j}$ é a correlação dos resíduos ao lag $j$ e $N$ é o tamanho da amostra. Como aqui as estatísticas de teste se distribuem como uma qui-quadrado com $k-p-q$. Rejeita-se $H_0$ se
+$$
+\begin{aligned}
+Q,LB > \tau
+\end{aligned}
+$$
+
+sendo $\tau = \chi_{\alpha}^{2}(k-p-q)$, em que $\alpha$ é o nível de significância.
+
+### Teste de heterocedasticidade - **ARCH-LM**
+O teste **ARCH lagrange multiplier** ou **ARCH-LM** é usado para detectar heterocedasticidade e é bem simples. Ele testa se os erros da regressão são variantes no tempo sem de fato estimar um parâmetro \textit{ARCH}. A estimação desse teste pode seguir a seguinte metodologia em dois passos:
+
+1. Estimar via MQO a equação da regressão mais adequada ou usar um modelo ARMA e assumir que $\hat{\varepsilon}_{t}^{2}$ seja o erro quadrático ajustado.
+2. Regressar os erros quadráticos contra uma constante e com $q$ lags desses valores $\hat{\varepsilon}_{t-1}^{2},\hat{\varepsilon}_{t-2}^{2},...,\hat{\varepsilon}_{t-q}^{2}$, estimando a seguinte regressão
+
+$$
+\begin{aligned}
+\hat{\varepsilon}_{t}^{2} = \alpha_{0} + \alpha_{1}\hat{\varepsilon}_{t-1}^{2} + \alpha_{2}\hat{\varepsilon}_{t-2}^{2} + ... + \alpha_{q}\hat{\varepsilon}_{t-q}^{2} 
+\end{aligned}
+$$
+
+Se não houver efeito ARCH ou GARCH, os valores estimados de $\alpha_{1}$ até $\alpha_{q}$ têm que ser zero. Essa regressão apresentará pouco poder explicatório, o que significa que o $R^{2}$ será pequeno. Usando um tamanho de amostra $T$, a estatística de teste $TR^{2}$ (vale ressaltar que isso é um produto) converge para uma distribuição $\chi^{2}$ com $q$ graus de liberdade. Por isso, esse tipo de teste entra na categoria de testes assintóticos, que dependem do tamanho da amostra. Se a amostra for muito pequena, o valor do teste $TR^{2}$ será superestimado, mas para amostras grandes, ele funciona bem. A hipótese nula aqui é $H_0:\varepsilon_{t}$ sem efeito ARCH (**sem heterocedasticidade**); $H_a:\varepsilon_{t}$ tem efeito ARCH (**tem heterocedasticidade**). A hipótese nula é rejeitada se $TR^{2} > \tau$.
+
+### Teste de normalidade - **Jarque-Bera**
+Dificilmente dados empíricos passam no teste de normalidade dos dados. O mais famoso teste para testar se os dados estão normalmente distribuídos é o teste de **Jarque-Bera**.
+**CONTINUAR**
+

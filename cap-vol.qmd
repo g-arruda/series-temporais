@@ -1,0 +1,63 @@
+# Modelos de volatilidade
+
+## Modelos lineares
+
+### ARCH
+
+Seja o modelo
+$$
+\begin{aligned}
+y_{t} = \mathbb{E}[y_{t} \! \mid I_{t-1}] + \nu_{t}
+\end{aligned}
+$$
+
+onde $\nu_{t} \sim i.i.d \, (0, \, h_{t})$ representa o erro do modelo, com média zero e uma variância $h_{t}$ que é condicional ao conjunto de informações passadas $I_{t-1} = \{y_{1}, x_{1}, ..., y_{t-1}, x_{t-1}\}$ e $\nu_{t}$ pode ser separado em duas partes, uma é a parte estocástica $\varepsilon_{t} \sim i.i.d \, (0, \, 1)$ e a outra é o desvio padrão condicional que depende do tempo $h^{\frac{1}{2}}$. Logo, a variância de $\nu_{t}$ é
+$$
+\begin{aligned}
+\mathbb{E}[\nu_{t}^{2} \mid I_{t-1} ] = h_{t}
+\end{aligned}
+$$
+
+Assumindo que a média é zero, podemos escrever o modelo ARCH básico da seguinte forma
+$$
+\begin{aligned}
+y_{t}=h_{t}^{\frac{1}{2}} \varepsilon_{t}
+\end{aligned}
+$$
+
+como $h$ é a variância condicional ao conjunto de informação, ele é definido como
+$$
+\begin{aligned}
+h_{t}=w + \alpha y_{t-1}^{2}
+\end{aligned}
+$$
+
+onde ele depende de uma constante e do quadrado da informação passada.
+
+**Note** que, como está ao quadrado a informação passada, o modelo ARCH, que é da classe dos lineares, **atribui peso igual para volatilidade tanto negativa quanto positiva**. A ideia central desse tipo de modelo é conseguir separar a volatilidade condicional do ruído branco e modelar essa volatilidade condicional $h_{t}$.
+
+**Modelo AR-ARCH:** Como aqui nos modelos de volatilidade nós estamos considerando o $y_{t}$ como uma série de retornos, pode acontecer de que os retornos sejam correlacionados, ainda que fracamente, sendo então adicionado um AR(1) ao modelo
+$$
+\begin{aligned}
+y_{t} &= \phi y_{t-1} + h_{t}^{\frac{1}{2}} \varepsilon_{t} \\
+h_{t} &=w + \alpha y_{t-1}^{2}
+\end{aligned}
+$$
+
+em que $\phi$ mede a correlação entre os retornos no tempo $t$ e $t-1$.
+
+### GARCH
+Esse modelo é uma extensão do modelo ARCH. Aqui, ele inclui dentro da variância sua própria defasagem. Podemos escrever o modelo GARCH(1,1) da seguinte maneira
+$$
+\begin{aligned}
+y_{t} &= \phi y_{t-1} + h_{t}^{\frac{1}{2}} \varepsilon_{t} \\
+h_{t} &= w + \alpha y_{t-1}^{2} + \beta h_{t-1}
+\end{aligned}
+$$
+
+e um modelo GARCH(p,q) é dado por
+$$
+\begin{aligned}
+h_{t} = w + \sum_{i=1}^{q} \alpha_{i}y_{t-i}^{2} + \sum_{i=1}^{p} \beta h_{t-p}
+\end{aligned}
+$$
