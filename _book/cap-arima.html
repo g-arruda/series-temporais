@@ -376,7 +376,7 @@ window.Quarto = {
     &amp;= (1 + \theta_{1}^{2} + \theta_{2}^{2} + \dots + \theta_{q}^{2}) \sigma_{\varepsilon}^{2}
 \end{aligned}
 \]</span> nota-se então que a variância de um modelo MA(2) é igual a <span class="math inline">\(\text{Var}[y_{t}] = (1 + \theta_{1}^{2} + \theta_{2}^{2}) \sigma_{\varepsilon}^{2}\)</span>.</p>
-<p><strong>Invertibilidade:</strong> As condições de invertibilidade do modelo são iguais às condições para que um modelo AR(p) seja estacionário, ou seja, <span class="math inline">\(\abs{\theta} &lt; 1\)</span>, ou que as raízes de <span class="math inline">\(\theta(L) = 0\)</span> sejam maiores que 1 em módulo.</p>
+<p><strong>Invertibilidade:</strong> As condições de invertibilidade do modelo são iguais às condições para que um modelo AR(p) seja estacionário, ou seja, <span class="math inline">\(|\theta| &lt; 1\)</span>, ou que as raízes de <span class="math inline">\(\theta(L) = 0\)</span> sejam maiores que 1 em módulo.</p>
 <p><strong>Função de autocorrelação:</strong> Vamos ter a seguinte fórmula para o caso geral de um modelo MA(q), <span class="math display">\[
 \begin{aligned}
     \rho_k= \begin{cases}\dfrac{-\theta_k+\theta_1 \theta_{k+1}+\dots+\theta_{q-k} \theta_q}{1+\theta_1^2+\dots+\theta_q^2} &amp; k=1,2, \dots, q \\ 0 &amp; k&gt;q\end{cases}
