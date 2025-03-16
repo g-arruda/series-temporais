@@ -14,11 +14,8 @@ Vale ressaltar que este projeto ainda esta em construção e, portanto, pode con
 
 - **Capítulo 1**: Introdução às Séries Temporais
 - **Capítulo 2**: Modelos ARIMA
-- **Capítulo 3**: Modelos de Suavização Exponencial
-- **Capítulo 4**: Modelos de Volatilidade (GARCH)
-- **Capítulo 5**: Modelos de Vetores Autorregressivos (VAR)
-- **Capítulo 6**: Previsão e Validação de Modelos
-
+- **Capítulo 3**: Modelos de Volatilidade (GARCH)
+- **Capítulo 4**: Estimaçaão de Modelos (ainda em construção)
 ## Visualização
 
 Para visualizar o conteúdo do livro, acesse <https://g-arruda.github.io/series-temporais/>.
