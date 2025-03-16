@@ -15,7 +15,7 @@ Vale ressaltar que este projeto ainda esta em construção e, portanto, pode con
 - **Capítulo 1**: Introdução às Séries Temporais
 - **Capítulo 2**: Modelos ARIMA
 - **Capítulo 3**: Modelos de Volatilidade (GARCH)
-- **Capítulo 4**: Estimaçaão de Modelos (ainda em construção)
+- **Capítulo 4**: Estimação de Modelos (ainda em construção)
 ## Visualização
 
 Para visualizar o conteúdo do livro, acesse <https://g-arruda.github.io/series-temporais/>.
